@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aveji - Эксклюзивная мебель для дома</title>
+    <link rel="icon" href="data:,">
+
+    <style>
+        /* ==========================================================================
+           1. Базовые настройки страницы и Плавный скролл
+           ========================================================================== */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body, html {
+            font-family: Arial, sans-serif;
+            background-color: #fff;
+            color: #333;
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 5%;
+            background-color: #fff;
+            border-bottom: 1px solid #f0f0f0;
+            position: relative;
+            z-index: 100;
+        }
+        .logo { font-size: 24px; font-weight: bold; letter-spacing: 1px; }
+        nav a { margin: 0 15px; text-decoration: none; color: #333; font-size: 14px; }
+        .phone { font-weight: bold; text-decoration: none; color: #333; }
+
+        /* ==========================================================================
+           2. Эффекты Скролла (CSS Scroll-Driven Animations)
+           ========================================================================== */
+        @keyframes fadeReveal {
+            from { opacity: 0; transform: translateY(40px) scale(0.9); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @keyframes cardReveal {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ==========================================================================
+           3. Главный экран (Hero)
+           ========================================================================== */
+        .hero {
+            height: 100vh;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            padding: 0 5%;
+            background-image: url('images/hero.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+        .hero-content {
+            max-width: 300px;
+            color: #fff;
+            text-shadow: 2px 2px 15px rgba(0, 0, 0, 0.8);
+            animation: fadeReveal both;
+            animation-timeline: view();
+            animation-range: entry 100% exit 50%;
+        }
+        .hero h1 { font-size: 42px; margin-bottom: 20px; line-height: 1.2; }
+        .hero button {
+            background-color: #bf9b30; color: #fff; border: none;
+            padding: 15px 30px; font-size: 14px; cursor: pointer;
+            text-transform: uppercase; letter-spacing: 1px;
+            font-weight: bold;
+        }
+
+        /* ==========================================================================
+           4. Блок "О компании" (Две колонки)
+           ========================================================================== */
+        .about {
+            background-color: #111;
+            color: #fff;
+            width: 100%;
+            padding: 120px 5%;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 60px;
+            align-items: center;
+        }
+        .about-text {
+            max-width: 550px;
+            animation: fadeReveal both;
+            animation-timeline: view();
+            animation-range: entry 10% view 60%;
+        }
+        .about-text h2 { font-size: 32px; margin-bottom: 25px; color: #bf9b30; line-height: 1.3; }
+        .about-text p { font-size: 16px; line-height: 1.7; color: #ccc; }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            text-align: center;
+            animation: fadeReveal both;
+            animation-timeline: view();
+            animation-range: entry 10% view 60%;
+        }
+        .stat-item {
+            background: #1a1a1a;
+            padding: 30px 15px;
+            border-radius: 4px;
+            border-bottom: 3px solid #bf9b30;
+        }
+        .stat-item h3 { font-size: 36px; color: #bf9b30; margin-bottom: 8px; }
+        .stat-item p { font-size: 12px; color: #aaa; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* ==========================================================================
+           5. Блок "Как мы работаем"
+           ========================================================================== */
+        .workflow { padding: 100px 5%; max-width: 1200px; margin: 0 auto; }
+        .workflow h2 { font-size: 32px; margin-bottom: 40px; text-align: center; }
+        .grid-steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 30px; }
+        .step-item {
+            background: #fdfdfd; padding: 25px; border-left: 3px solid #bf9b30;
+            animation: cardReveal both;
+            animation-timeline: view();
+            animation-range: entry 5% view 40%;
+        }
+        .step-item h3 { font-size: 18px; margin-bottom: 10px; }
+        .step-item p { font-size: 14px; color: #666; line-height: 1.5; }
+
+        /* ==========================================================================
+           6. СЕТКА НАШИ ПРОЕКТЫ: УМНЫЙ ФИЛЬТР (Все 4 проекта на экране!)
+           ========================================================================== */
+        .projects { padding: 100px 5%; max-width: 1200px; margin: 0 auto; }
+        .projects h2 { font-size: 32px; margin-bottom: 20px; }
+
+        /* Кнопки интерактивного фильтра */
+        .tabs-menu {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+        .tab-btn {
+            background: #f5f5f5;
+            color: #333;
+            border: 1px solid #eee;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        .tab-btn.active, .tab-btn:hover {
+            background: #bf9b30;
+            color: #fff;
+            border-color: #bf9b30;
+        }
+
+        /* Общая сетка 2х2 для всех четырех проектов */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 30px;
+        }
+
+        .project-card {
+            position: relative;
+            overflow: hidden;
+            height: 350px;
+            background-color: #eee;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            cursor: pointer;
+            transition: transform 0.4s, opacity 0.4s, cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+            animation: cardReveal both;
+            animation-timeline: view();
+            animation-range: entry 5% view 35%;
+        }
+        .project-card:hover { transform: scale(1.03); }
+
+        .project-card::before {
+            content: 'Нажмите для обзора';
+            position: absolute; top:0; left:0; width:100%; height:100%;
+            background: rgba(0,0,0,0.4); color: #fff;
+            display: flex; justify-content: center; align-items: center;
+            opacity: 0; transition: opacity 0.3s; font-weight: bold; z-index: 2;
+        }
+        .project-card:hover::before { opacity: 1; }
+
+        /* Стильное скрытие отфильтрованных карточек */
+        .project-card.hide {
+            opacity: 0;
+            transform: scale(0.8);
+            pointer-events: none;
+            position: absolute;
+            width: 0;
+            height: 0;
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Обращение к вашим 4-м картинкам строго в CSS */
+        .card-1 { background-image: url('images/project1.jpg'); }
+        .card-2 { background-image: url('images/project2.jpg'); }
+        .card-3 { background-image: url('images/project3.jpg'); }
+        .card-4 { background-image: url('images/project4.jpg'); }
+
+        .project-info {
+            position: absolute; bottom: 0; left: 0; width: 100%;
+            padding: 20px; background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            color: #fff; z-index: 3;
+        }
+
+        /* ==========================================================================
+           7. ИНТЕРАКТИВНЫЕ ВСПЛЫВАЮЩИЕ ОКНА (Модальные окна)
+           ========================================================================== */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); backdrop-filter: blur(5px);
+            z-index: 1000; display: none; justify-content: center; align-items: center;
+            padding: 20px;
+        }
+        .modal-overlay.active { display: flex; }
+
+        .modal-window {
+            background: #fff; padding: 40px; max-width: 500px; width: 100%;
+            position: relative; color: #333; border-top: 5px solid #bf9b30;
+            animation: cardReveal 0.4s ease;
+        }
+        .modal-close {
+            position: absolute; top: 15px; right: 20px;
+            font-size: 28px; cursor: pointer; color: #999;
+        }
+        .modal-close:hover { color: #000; }
+        .modal-window h3 { margin-bottom: 15px; font-size: 24px; color: #bf9b30; }
+        .modal-window ul { list-style: none; margin-bottom: 25px; }
+        .modal-window li { margin-bottom: 10px; font-size: 15px; border-bottom: 1px dashed #eee; padding-bottom: 5px; }
+        .modal-window strong { color: #111; }
+
+        /* ==========================================================================
+           8. Отзывы, Форма заказа и Подвал
+           ========================================================================== */
+        .reviews { background-color: #f9f9f9; padding: 100px 5%; text-align: center; }
+        .reviews-container { display: flex; flex-wrap: wrap; gap: 30px; justify-content: center; margin-top: 40px; }
+        .review-card { background: #fff; padding: 30px; max-width: 350px; text-align: left; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .review-card p { font-style: italic; color: #555; margin-bottom: 15px; line-height: 1.5; }
+        .review-card h4 { font-size: 16px; color: #bf9b30; }
+
+        .order-section {
+            width: 100%; padding: 120px 5%; display: flex; justify-content: center; align-items: center; min-height: 550px;
+            background-image: url('images/footer-banner.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat; background-attachment: fixed;
+        }
+        .order-form-container { background: rgba(255, 255, 255, 0.95); padding: 40px; max-width: 450px; width: 100%; color: #333; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+        .order-form-container h2 { margin-bottom: 20px; font-size: 24px; }
+        .order-form-container input { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ccc; outline: none; }
+        .order-form-container button { width: 100%; padding: 12px; background: #333; color: #fff; border: none; cursor: pointer; font-weight: bold; text-transform: uppercase; }
+
+        footer { background: #1a1a1a; color: #fff; padding: 40px 5%; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 20px; font-size: 14px; }
+        footer a { color: #ccc; text-decoration: none; margin-right: 15px; }
+
+        @media (hover: none) and (pointer: coarse) { .hero, .order-section { background-attachment: scroll !important; } }
+    </style>
+</head>
+<body>
+
+    <!-- Шапка сайта -->
+    <header>
+        <div class="logo">AdvanceLVV</div>
+        <nav>
+            <a href="#about">О нас</a>
+            <a href="#projects">Проекты</a>
+            <a href="#reviews">Отзывы</a>
+        </nav>
+        <a href="tel:+79999999999" class="phone">+38 063 278 50 47</a>
+    </header>
+
+    <!-- 1. Главный экран -->
+    <div class="hero">
+        <div class="hero-content">
+            <h1>Эксклюзивная мебель для дома</h1>
+
+            <button onclick="document.getElementById('order').scrollIntoView();">Заказать проект</button>
+        </div>
+    </div>
+
+    <!-- 2. Блок О компании -->
+    <div class="about" id="about">
+        <div class="about-text">
+            <h2>О компании.<br>Более 5 лет создаем мебель для вашего комфорта</h2>
+            <p>Мы — команда профессионалов, которые могут произвести любую мебель для вашего проекта. В качестве материалов используем натуральные — стекло, дерево, бетон, камень, металл и эпоксидную смолу.</p>
+        </div>
+        <div class="stats">
+            <div class="stat-item"><h3>1 год</h3><p>гарантии</p></div>
+            <div class="stat-item"><h3>300+</h3><p>проектов</p></div>
+            <div class="stat-item"><h3>15 дней</h3><p>срок производства</p></div>
+        </div>
+    </div>
+
+    <!-- 3. Блок Как мы работаем -->
+    <div class="workflow">
+        <h2>Как мы работаем</h2>
+        <div class="grid-steps">
+            <div class="step-item"><h3>Идея</h3><p>Клиент приходит к нам с референсом, а мы делаем технические чертежи.</p></div>
+            <div class="step-item"><h3>Техническое задание</h3><p>Формулируем корректное ТЗ с визуализацией и габаритами.</p></div>
+            <div class="step-item"><h3>Смета</h3><p>Подстраиваемся под бюджет клиента, оптимизируя материалы.</p></div>
+            <div class="step-item"><h3>Производство</h3><p>Изготовление занимает от 15 дней. Монтаж делаем сами.</p></div>
+        </div>
+    </div>
+
+    <!-- 4. Сетка проектов с УМНЫМ ФИЛЬТРОМ (Все 4 проекта видны сразу) -->
+    <div class="projects" id="projects">
+        <h2>Наши проекты</h2>
+
+        <!-- Кнопки переключения фильтра (как на risolut.ru) -->
+        <div class="tabs-menu">
+            <button class="tab-btn active" onclick="filterProjects('all', this)">Все проекты</button>
+            <button class="tab-btn" onclick="filterProjects('kitchen', this)">Кухни</button>
+            <button class="tab-btn" onclick="filterProjects('closet', this)">Шкафы</button>
+        </div>
+
+        <!-- ЕДИНАЯ СЕТКА: Все ваши 4 карточки на месте! -->
+        <div class="projects-grid">
+
+            <!-- Карточка 1 (Тег data-category связывает её с кнопкой фильтра) -->
+            <div class="project-card card-1" data-category="kitchen" onclick="openModal('modal-k1')">
+                <div class="project-info"><h3>Современная кухня "Спейс"</h3></div>
+            </div>
+
+            <!-- Карточка 2 -->
+            <div class="project-card card-2" data-category="kitchen" onclick="openModal('modal-k2')">
+                <div class="project-info"><h3>Скандинавская кухня "Норд"</h3></div>
+            </div>
+
+            <!-- Карточка 3 -->
+            <div class="project-card card-3" data-category="closet" onclick="openModal('modal-c1')">
+                <div class="project-info"><h3>Встроенный шкаф-купе</h3></div>
+            </div>
+
+            <!-- Карточка 4 -->
+            <div class="project-card card-4" data-category="closet" onclick="openModal('modal-c2')">
+                <div class="project-info"><h3>Премиальная гардеробная</h3></div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ВСПЛЫВАЮЩИЕ ОКНА С ХАРАКТЕРИСТИКАМИ (МОДАЛКИ) -->
+    <div class="modal-overlay" id="modal-k1" onclick="closeModal(this, event)">
+        <div class="modal-window">
+            <span class="modal-close" onclick="document.getElementById('modal-k1').classList.remove('active')">&times;</span>
+            <h3>Кухня "Спейс"</h3>
+            <ul>
+                <li><strong>Стиль:</strong> Модерн / Хай-тек</li>
+                <li><strong>Тип планировки:</strong> П-образная с островом</li>
+                <li><strong>Материал фасадов:</strong> Матовый Acryline (Тауп)</li>
+                <li><strong>Фурнитура:</strong> Blum (Австрия) с доводчиками</li>
+                <li><strong>Срок изготовления:</strong> 18 рабочих дней</li>
+            </ul>
+            <button style="width:100%; padding:12px; background:#bf9b30; color:#fff; border:none; cursor:pointer; font-weight:bold;" onclick="document.getElementById('modal-k1').classList.remove('active'); document.getElementById('order').scrollIntoView();">ХОЧУ ТАКУЮ КУХНЮ</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modal-k2" onclick="closeModal(this, event)">
+        <div class="modal-window">
+            <span class="modal-close" onclick="document.getElementById('modal-k2').classList.remove('active')">&times;</span>
+            <h3>Кухня "Норд"</h3>
+            <ul>
+                <li><strong>Стиль:</strong> Скандинавский минимализм</li>
+                <li><strong>Тип планировки:</strong> Угловая (Г-образная)</li>
+                <li><strong>Материал фасадов:</strong> МДФ под пленкой ПВХ (Белый шелку)</li>
+                <li><strong>Столешница:</strong> Влагостойкий ЛДСП Slotex (Дуб)</li>
+            </ul>
+            <button style="width:100%; padding:12px; background:#bf9b30; color:#fff; border:none; cursor:pointer; font-weight:bold;" onclick="document.getElementById('modal-k2').classList.remove('active'); document.getElementById('order').scrollIntoView();">ХОЧУ ТАКУЮ КУХНЮ</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modal-c1" onclick="closeModal(this, event)">
+        <div class="modal-window">
+            <span class="modal-close" onclick="document.getElementById('modal-c1').classList.remove('active')">&times;</span>
+            <h3>Встроенный шкаф-купе</h3>
+            <ul>
+                <li><strong>Тип:</strong> Встроенный трехдверный шкаф</li>
+                <li><strong>Профиль дверей:</strong> Алюминиевый профиль Aristo</li>
+                <li><strong>Наполнение:</strong> Выдвижные корзины, обувные сетки</li>
+            </ul>
+            <button style="width:100%; padding:12px; background:#bf9b30; color:#fff; border:none; cursor:pointer; font-weight:bold;" onclick="document.getElementById('modal-c1').classList.remove('active'); document.getElementById('order').scrollIntoView();">УЗНАТЬ СТОИМОСТЬ ШКАФА</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modal-c2" onclick="closeModal(this, event)">
+        <div class="modal-window">
+            <span class="modal-close" onclick="document.getElementById('modal-c2').classList.remove('active')">&times;</span>
+            <h3>Премиальная гардеробная</h3>
+            <ul>
+                <li><strong>Конфигурация:</strong> Открытая П-образная система</li>
+                <li><strong>Материалы:</strong> ЛДСП Egger с текстурой дерева</li>
+                <li><strong>Подсветка:</strong> Интегрированные врезные LED-ленты</li>
+            </ul>
+            <button style="width:100%; padding:12px; background:#bf9b30; color:#fff; border:none; cursor:pointer; font-weight:bold;" onclick="document.getElementById('modal-c2').classList.remove('active'); document.getElementById('order').scrollIntoView();">РАССЧИТАТЬ ГАРДЕРОБНУЮ</button>
+        </div>
+    </div>
+
+    <!-- 5. Блок Отзывы -->
+    <div class="reviews" id="reviews">
+        <h2>Отзывы наших клиентов</h2>
+        <div class="reviews-container">
+            <div class="review-card">
+                <p>"Команда сразу поняла, какой дизайн я хочу. Итог понравился, все на высшем уровне."</p>
+                <h4>Игорь Антонов</h4>
+            </div>
+            <div class="review-card">
+                <p>"Абсолютно любые решения, в любых размерах и форм-факторе, то что нужно!"</p>
+                <h4>Ольга Иванова</h4>
+            </div>
+        </div>
+    </div>
+
+    <!-- 6. Форма заказа -->
+    <div class="order-section" id="order">
+        <div class="order-form-container">
+            <h2>Хотите заказать проект?</h2>
+            <p style="margin-bottom: 20px; color: #666;">Оставьте заявку, и мы вам перезвоним</p>
+            <form action="#" method="POST">
+                <input type="text" placeholder="Имя" required>
+                <input type="email" placeholder="E-mail" required>
+                <input type="tel" placeholder="Телефон" required>
+                <button type="submit">Отправить заявку</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Подвал сайта -->
+    <footer>
+        <div>© 2026 LVV. Все права защищены.</div>
+        <div>
+            <a href="#">Политика конфиденциальности</a>
+            <a href="#">Оплата и доставка</a>
+        </div>
+    </footer>
+
+    <!-- ==========================================================================
+       9. ЛЕГКИЙ И АВТОНОМНЫЙ JAVASCRIPT-БЛОК ДЛЯ СЕТКИ И МОДАЛОК
+       ========================================================================== -->
+    <script>
+        // Умная функция фильтрации проектов
+        function filterProjects(category, btn) {
+            // Подсвечиваем нажатую кнопку
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            // Фильтруем карточки
+            document.querySelectorAll('.project-card').forEach(card => {
+                if (category === 'all' || card.getAttribute('data-category') === category) {
+                    card.classList.remove('hide'); // Показываем
+                } else {
+                    card.classList.add('hide');    // Плавно прячем
+                }
+            });
+        }
+
+        // Функции для управления всплывающими окнами (Модалки)
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+        }
+
+        function closeModal(overlay, event) {
+            if (event.target === overlay) {
+                overlay.classList.remove('active');
+            }
+        }
+    </script>
+</body>
+</html>
